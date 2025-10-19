@@ -17,6 +17,10 @@
 # Import built-in json library for handling input/output
 import json
 
+# polynomial arithmetic handlers
+import polynomial.solve as poly_solve
+import finite.solve as fin_solve
+
 
 def solve_exercise(exercise_location: str, answer_location: str):
     """
@@ -32,9 +36,33 @@ def solve_exercise(exercise_location: str, answer_location: str):
 
     ### Parse and solve ###
 
-    # Check type of exercise
     # TODO: check function params
-    # TODO: exercise match
+    answer = __parse_solve(exercise)
+    with open(answer_location, "w") as answer_file:
+        json.dump(answer, answer_file, indent=4)
+
+
+def __is_valid(exercise: dict[str, list[int] | int]) -> bool:
+    """
+    Verifies that exercise is valid and basic preconditions hold (primes, degrees)
+    """
+    # TODO: verify preconditions for each task
+    return False
+
+
+def __parse_solve(
+    exercise: dict[str, list[int] | int],
+) -> dict[str, list[int] | bool | None]:
+    """
+    Parses exercise by exercise type and returns result of the computation
+    """
+    # answer-a, answer-b, answer-gcd - extended euclidean
+    # answer-q, answer-r - any division
+    # answer - otherwise
+    if exercise["type"] == "polynomial_arithmetic":
+        return poly_solve.solve(exercise)
+    else:
+        return fin_solve.solve(exercise)
 
 
 # You can call your function from here
