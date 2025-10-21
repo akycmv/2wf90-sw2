@@ -22,6 +22,7 @@ def add(f: list[int], g: list[int], p: int) -> list[int]:
     i = n
     while i > 0 and out[i - 1] == 0:
         i -= 1
+
     return out[:i]
 
 
