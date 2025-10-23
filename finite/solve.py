@@ -29,15 +29,12 @@ def solve(exercise) -> dict[str, list[int] | bool | None]:
                 exercise["polynomial_modulus"],
             )
         case "division":
-            q, r = mult_div.div(
+            answer["answer"] = mult_div.div(
                 exercise["f"],
                 exercise["g"],
                 exercise["integer_modulus"],
                 exercise["polynomial_modulus"],
             )
-            del answer["answer"]
-            answer["answer-q"] = q
-            answer["answer-r"] = r
         case "inversion":
             answer["answer"] = inverse.inverse(
                 exercise["f"],
