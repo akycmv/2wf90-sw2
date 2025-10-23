@@ -1,6 +1,6 @@
 # module with multiplication, division of polynomials in finite fields
 
-from finite.poly_helpers import poly_mult, poly_long_div
+from polynomial.mult_div import mult as poly_mult, div as poly_div
 
 
 def mult(f: list[int], g: list[int], p: int, h: list[int]) -> list[int]:
@@ -11,10 +11,10 @@ def mult(f: list[int], g: list[int], p: int, h: list[int]) -> list[int]:
     product = poly_mult(f, g, p)
 
     # Reduce modulo h to get canonical form
-    _, remainder = poly_long_div(product, h, p)
+    _, remainder = poly_div(product, h, p)
 
-    # Handle None case (shouldn't happen with valid h)
-    if remainder is None:
+    # Handle empty result (polynomial module returns [] for zero)
+    if not remainder:
         return [0]
 
     return remainder

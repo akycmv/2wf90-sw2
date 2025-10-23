@@ -1,6 +1,7 @@
 # module with inversion implementation for finite fields
 
-from finite.poly_helpers import poly_egcd, poly_long_div
+from polynomial.egcd import egcd as poly_egcd
+from polynomial.mult_div import div as poly_div
 
 
 def inverse(f: list[int], p: int, h: list[int]) -> list[int]:
@@ -19,13 +20,14 @@ def inverse(f: list[int], p: int, h: list[int]) -> list[int]:
     a, b, d = poly_egcd(f, h, p)
 
     # Check if gcd is not 1 (inverse doesn't exist)
-    if d is None or not (len(d) == 1 and d[0] == 1):
+    if not d or not (len(d) == 1 and d[0] == 1):
         return None
 
     # a is the inverse, but we need to ensure it's in canonical form (mod h)
-    _, a_reduced = poly_long_div(a, h, p)
+    _, a_reduced = poly_div(a, h, p)
 
-    if a_reduced is None:
+    # Handle empty result
+    if not a_reduced:
         return [0]
 
     return a_reduced
