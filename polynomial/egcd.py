@@ -2,6 +2,7 @@
 
 from polynomial import mult_div
 from polynomial import add_sub
+from util.util import remove_degree
 
 
 def egcd(a: list[int], b: list[int], p: int) -> tuple[list[int], list[int], list[int]]:
@@ -13,10 +14,10 @@ def egcd(a: list[int], b: list[int], p: int) -> tuple[list[int], list[int], list
     and returns x, y, d (in this order)
     """
 
-    while a and a[-1] == 0:
-        a.pop()
-    while b and b[-1] == 0:
-        b.pop()
+    # algorithm taken from Algebra for Security script, page 27, algorithm 2.3.10 (Extended Euclidean algorithm for polynomials)
+
+    a = remove_degree(a)
+    b = remove_degree(b)
 
     x, v = [1], [1]
     y, u = [0], [0]
@@ -29,8 +30,9 @@ def egcd(a: list[int], b: list[int], p: int) -> tuple[list[int], list[int], list
         u = add_sub.sub(xt, mult_div.mult(q, u, p), p)
         v = add_sub.sub(yt, mult_div.mult(q, v, p), p)
 
-    while a and a[-1] == 0:
-        a.pop()
+    a = remove_degree(a)
+    x = remove_degree(x)
+    y = remove_degree(y)
 
     # monic gcd
     if a:

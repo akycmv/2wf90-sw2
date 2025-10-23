@@ -1,5 +1,7 @@
 # module with implementations of addition and subtraction
 
+from util.util import degree, remove_degree
+
 
 def add(f: list[int], g: list[int], p: int) -> list[int]:
     """
@@ -19,11 +21,7 @@ def add(f: list[int], g: list[int], p: int) -> list[int]:
         out[i] = out[i] % p
 
     # remove trailing degrees e.g [0, 1, 2, 3, 0] -> [0, 1, 2, 3]
-    i = n
-    while i > 0 and out[i - 1] == 0:
-        i -= 1
-
-    return out[:i]
+    return remove_degree(out)
 
 
 def sub(f: list[int], g: list[int], p: int) -> list[int]:
@@ -42,8 +40,4 @@ def sub(f: list[int], g: list[int], p: int) -> list[int]:
         out[i] = f[i] - g[i]
         out[i] = out[i] % p
 
-    i = n
-    while i > 0 and out[i - 1] == 0:
-        i -= 1
-
-    return out[:i]
+    return remove_degree(out)

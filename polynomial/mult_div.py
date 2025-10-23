@@ -1,5 +1,7 @@
 # module with implementations of multiplication and (long) division
 
+from util.util import degree, remove_degree
+
 
 def mult(f: list[int], g: list[int], p: int) -> list[int]:
     """
@@ -19,67 +21,48 @@ def mult(f: list[int], g: list[int], p: int) -> list[int]:
             out[i + j] = (out[i + j] + f[i] * g[j]) % p
 
     # remove trailing degrees
-    i = len(out)
-    while i > 0 and out[i - 1] == 0:
-        i -= 1
-
-    return out[:i]
+    return remove_degree(out)
 
 
 def div(f: list[int], g: list[int], p: int) -> tuple[list[int], list[int]]:
-    """'
+    """
     Divides f by g in Z_p[X] using long division and returns q, r (in this order) such that
     f = q * g + r
     """
 
-    # f = 0 * g + f
-    if len(f) < len(g):
+    f = remove_degree(f[:])
+    g = remove_degree(g[:])
+
+    deg_f = degree(f)
+    deg_g = degree(g)
+
+    if deg_f < deg_g or deg_f < 0:
         return [0], f
 
-    while f and f[-1] == 0:
-        f.pop()
+    q = []
+    r = f[:]
 
-    while g and g[-1] == 0:
-        g.pop()
-
-    # algorithm taken from Algebra for Security script, page 21, algorithm 2.2.2 (Long Division)
-
-    q = [0 for _ in range(len(f))]
-    r = f.copy()
-
-    deg_r = len(r) - 1
-    deg_g = len(g) - 1
-
-    # lc(g), lc(g)^-1
     lc_g = g[deg_g]
     lc_g_inv = pow(lc_g, p - 2, p)
 
-    # while deg(r) >= deg(g)
+    deg_r = degree(r)
+
     while deg_r >= deg_g and deg_r >= 0:
         lc_r = r[deg_r]
+        coeff = (lc_r * lc_g_inv) % p
+        shift = deg_r - deg_g
 
-        # lc(r) * lc(g)^-1
-        coef = (lc_r * lc_g_inv) % p
-        dd = deg_r - deg_g
+        while len(q) <= shift:
+            q.append(0)
+        q[shift] = (q[shift] + coeff) % p
 
-        # q = q + coef * ...
-        q[dd] = (q[dd] + coef) % p
+        for i in range(len(g)):
+            if i + shift < len(r):
+                r[i + shift] = (r[i + shift] - coeff * g[i]) % p
 
-        # r = r - coef * ...
-        for i in range(deg_g + 1):
-            r[i + dd] = (r[i + dd] - coef * g[i]) % p
+        deg_r = degree(r)
 
-        # shift degree
-        while deg_r >= 0 and r[deg_r] == 0:
-            deg_r -= 1
+    q = remove_degree(q if q else [0])
+    r = remove_degree(r)
 
-    # remove leading degrees
-    qi, ri = len(q), len(r)
-
-    while qi > 0 and q[qi - 1] == 0:
-        qi -= 1
-
-    while ri > 0 and r[ri - 1] == 0:
-        ri -= 1
-
-    return q[:qi] if qi != 0 else [0], r[:ri] if ri != 0 else [0]
+    return q, r
