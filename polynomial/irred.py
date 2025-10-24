@@ -1,35 +1,51 @@
 # module with irreducibility (check, generation) implementations
 
-from polynomial import egcd
-from polynomial import add_sub
+from polynomial import egcd, add_sub
 import random
+from util.util import remove_degree
 
 
 def check(f: list[int], p: int) -> bool:
     """
-    Checks if f is irreducible in Z_mod[X]
+    Checks if f is irreducible in Z_p[X]
     """
 
-    # algorithm taken from Algebra for Security script, page 72, algorithm 7.1.4 (Testing irreducibility)
-    # TODO: testing irreducibility 2, 7.1.6
+    f = remove_degree(f)
+    n = len(f) - 1
+    if n < 2:
+        return True
 
-    t = 1
+    # algorithm taken from Algebra for Security script, page 72, algorithm 7.1.6 (Testing irreducibility II)
 
-    while True:
-        # g = X^(q^t) - X
-        # X^(q^t) = [0 ... 1], len = q^t
-        # X = [0, 1]
-        g = [0 for _ in range(pow(p, t))]
-        g[-1] = 1
-        g = add_sub.sub(g, [0, 1], p)
+    i = 0
+    pdivs = __prime_divisors(n)
+    k = len(pdivs)
+
+    # check gcd(f, X^(p^t) - X) = 1 for all t = n/p_i
+    while i < k:
+        t = n // pdivs[i]
+
+        # g = X^(p^t) - X
+        g = __pow_poly(p, t)
 
         _, _, gcd = egcd.egcd(f, g, p)
-        if gcd != [1]:
-            break
+        gcd = remove_degree(gcd)
 
-        t += 1
+        if not (len(gcd) == 1 and gcd[0] == 1):
+            return False
 
-    return t == len(f) - 1
+        i += 1
+
+    # Step 3: Check if f | (X^(p^n) - X)
+    g = __pow_poly(p, n)
+    _, _, gcd = egcd.egcd(f, g, p)
+    gcd = remove_degree(gcd)
+
+    # Check if gcd == f (meaning f divides g)
+    if i == k and gcd == f:
+        return True
+
+    return False
 
 
 def generate(n: int, p: int) -> list[int]:
@@ -57,3 +73,38 @@ def __rand_poly(n: int, p: int) -> list[int]:
         f[-1] = random.randint(1, p)
 
     return f
+
+
+def __pow_poly(p: int, n: int) -> list[int]:
+    """
+    Returns polynomial X^q^t - X
+    """
+    d = pow(p, n)
+    g = [0 for _ in range(d + 1)]
+    g[-1] = 1
+    g[1] = p - 1
+    return g
+
+
+def __prime_divisors(n: int) -> list[int]:
+    """
+    Returns list of prime divisors of n
+    """
+    if n <= 1:
+        return []
+
+    primes: list[int] = []
+
+    for i in range(2, n // 2 + 1):
+        if n % i == 0:
+            primes.append(i)
+            while n % i == 0:
+                n //= i
+
+        if n == 1:
+            break
+
+    if n > 1:
+        primes.append(n)
+
+    return primes
