@@ -24,7 +24,9 @@ def mult(f: list[int], g: list[int], p: int) -> list[int]:
     return remove_degree(out)
 
 
-def div(f: list[int], g: list[int], p: int) -> tuple[list[int], list[int]] | None:
+def div(
+    f: list[int], g: list[int], p: int
+) -> tuple[list[int], list[int]] | tuple[None, None]:
     """
     Divides f by g in Z_p[X] using long division and returns q, r (in this order) such that
     f = q * g + r
@@ -36,7 +38,7 @@ def div(f: list[int], g: list[int], p: int) -> tuple[list[int], list[int]] | Non
     g = remove_degree(g[:])
 
     if not g or all(c == 0 for c in g):
-        return None
+        return None, None
 
     if not f or all(c == 0 for c in f):
         return [0], [0]

@@ -5,7 +5,9 @@ from polynomial import add_sub
 from util.util import remove_degree
 
 
-def egcd(a: list[int], b: list[int], p: int) -> tuple[list[int], list[int], list[int]]:
+def egcd(
+    a: list[int], b: list[int], p: int
+) -> tuple[list[int], list[int], list[int]] | tuple[None, None, None]:
     """
     Finds x, y, d such that:
     x * a + y * b = d, in Z_p[X],
@@ -24,6 +26,8 @@ def egcd(a: list[int], b: list[int], p: int) -> tuple[list[int], list[int], list
 
     while b and any(c != 0 for c in b):
         q, r = mult_div.div(a, b, p)
+        if not q or not r:
+            return None, None, None
         a, b = b, r
         xt, yt = x, y
         x, y = u, v

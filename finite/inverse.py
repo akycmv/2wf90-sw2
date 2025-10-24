@@ -4,7 +4,7 @@ from polynomial.egcd import egcd as poly_egcd
 from polynomial.mult_div import div as poly_div
 
 
-def inverse(f: list[int], p: int, h: list[int]) -> list[int]:
+def inverse(f: list[int], p: int, h: list[int]) -> list[int] | None:
     """
     Finds inverse f^-1 of f in Z_p[X]/(h) using Extended Euclidean Algorithm
     Returns None if f is zero or if inverse doesn't exist
@@ -20,7 +20,7 @@ def inverse(f: list[int], p: int, h: list[int]) -> list[int]:
     a, b, d = poly_egcd(f, h, p)
 
     # Check if gcd is not 1 (inverse doesn't exist)
-    if not d or not (len(d) == 1 and d[0] == 1):
+    if not d or not (len(d) == 1 and d[0] == 1) or not a:
         return None
 
     # a is the inverse, but we need to ensure it's in canonical form (mod h)

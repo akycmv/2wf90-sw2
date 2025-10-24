@@ -62,5 +62,5 @@ def test_path(path: str):
 
 
 if __name__ == "__main__":
-    test_path(join("tests", "simple"))
-    # test_path(join("tests", "realistic"))
+    # test_path(join("tests", "simple"))
+    test_path(join("tests", "realistic"))

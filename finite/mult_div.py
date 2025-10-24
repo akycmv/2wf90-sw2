@@ -20,7 +20,7 @@ def mult(f: list[int], g: list[int], p: int, h: list[int]) -> list[int]:
     return remainder
 
 
-def div(f: list[int], g: list[int], p: int, h: list[int]) -> list[int]:
+def div(f: list[int], g: list[int], p: int, h: list[int]) -> list[int] | None:
     """
     Divides f by g in Z_p[X]/(h) and returns f/g = f * g^(-1) in canonical form
     Returns None if g is zero (division undefined)
