@@ -27,16 +27,17 @@ def test_path(path: str):
         ):
             want = load(wantf)
             got = load(gotf)
+
+            print(expath, f"{exercise['type']} - {exercise['task']}")
             if exercise["task"] not in [
                 "extended_euclidean_algorithm",
                 "long_division",
             ]:
-                print(expath, want["answer"], got["answer"])
+                print(want["answer"], got["answer"])
                 print("\t", want["answer"] == got["answer"])
             else:
                 if exercise["task"] == "extended_euclidean_algorithm":
                     print(
-                        expath,
                         want["answer-a"],
                         want["answer-b"],
                         want["answer-gcd"],
@@ -49,7 +50,6 @@ def test_path(path: str):
                     print("\t", want["answer-gcd"] == got["answer-gcd"])
                 else:
                     print(
-                        expath,
                         want["answer-q"],
                         want["answer-r"],
                         got["answer-q"],
