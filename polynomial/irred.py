@@ -68,10 +68,9 @@ def __rand_poly(n: int, p: int) -> list[int]:
     """
 
     # random polynomial of degree n, degree n => lc != 0
-    f = random.sample(range(0, p), n)
+    f = random.choices(range(p), k=n + 1)
     while f[-1] == 0:
-        f[-1] = random.randint(1, p)
-
+        f[-1] = random.randint(1, p - 1)
     return f
 
 
