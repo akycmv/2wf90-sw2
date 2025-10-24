@@ -16,4 +16,4 @@ def remove_degree(t: list[int]) -> list[int]:
     i = len(t) - 1
     while i > 0 and t[i] == 0:
         i -= 1
-    return t[:i] if i > 0 else [0]
+    return t[: i + 1]

@@ -1,6 +1,6 @@
 # module with implementations of multiplication and (long) division
 
-from util.util import degree, remove_degree
+from util.util import remove_degree
 
 
 def mult(f: list[int], g: list[int], p: int) -> list[int]:
@@ -24,45 +24,50 @@ def mult(f: list[int], g: list[int], p: int) -> list[int]:
     return remove_degree(out)
 
 
-def div(f: list[int], g: list[int], p: int) -> tuple[list[int], list[int]]:
+def div(f: list[int], g: list[int], p: int) -> tuple[list[int], list[int]] | None:
     """
     Divides f by g in Z_p[X] using long division and returns q, r (in this order) such that
     f = q * g + r
+
+    Returns None if division by zero polynomial.
     """
 
     f = remove_degree(f[:])
     g = remove_degree(g[:])
 
-    deg_f = degree(f)
-    deg_g = degree(g)
+    if not g or all(c == 0 for c in g):
+        return None
 
-    if deg_f < deg_g or deg_f < 0:
+    if not f or all(c == 0 for c in f):
+        return [0], [0]
+
+    if len(f) < len(g):
         return [0], f
 
-    q = []
+    q = [0] * (len(f) - len(g) + 1)
     r = f[:]
 
-    lc_g = g[deg_g]
-    lc_g_inv = pow(lc_g, p - 2, p)
+    lead_g = g[-1] % p
+    inv_lead_g = __mod_inverse(lead_g, p)
 
-    deg_r = degree(r)
+    for i in range(len(f) - len(g), -1, -1):
+        r = remove_degree(r)
 
-    while deg_r >= deg_g and deg_r >= 0:
-        lc_r = r[deg_r]
-        coeff = (lc_r * lc_g_inv) % p
-        shift = deg_r - deg_g
+        if len(r) >= len(g) + i:
+            coeff = (r[-1] * inv_lead_g) % p
+            q[i] = coeff
 
-        while len(q) <= shift:
-            q.append(0)
-        q[shift] = (q[shift] + coeff) % p
+            for j in range(len(g)):
+                r[i + j] = (r[i + j] - coeff * g[j]) % p
 
-        for i in range(len(g)):
-            if i + shift < len(r):
-                r[i + shift] = (r[i + shift] - coeff * g[i]) % p
-
-        deg_r = degree(r)
-
-    q = remove_degree(q if q else [0])
-    r = remove_degree(r)
+    q = remove_degree(q) if q else [0]
+    r = remove_degree(r) if r else [0]
 
     return q, r
+
+
+def __mod_inverse(a: int, p: int) -> int:
+    """
+    Find modular inverse of a modulo p using Fermat's Little Theorem
+    """
+    return pow(a, p - 2, p)

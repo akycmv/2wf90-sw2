@@ -8,7 +8,7 @@ def test_path(path: str):
     """
     helper function for local development to test tests given along with the assignment
     """
-    for i in range(0, 14):
+    for i in range(0, 18):
         expath = f"exercise{i}.json"
         anspath = f"answer{i}.json"
         anscomp = f"answer-comp{i}.json"
@@ -29,7 +29,6 @@ def test_path(path: str):
             got = load(gotf)
             if exercise["task"] not in [
                 "extended_euclidean_algorithm",
-                "division",
                 "long_division",
             ]:
                 print(expath, want["answer"], got["answer"])

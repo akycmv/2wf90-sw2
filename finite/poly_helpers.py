@@ -4,7 +4,7 @@
 from polynomial.mult_div import mult as poly_mult, div as poly_div
 
 
-def get_prime_factors(n):
+def get_prime_factors(n: int) -> list[int]:
     """
     Returns list of unique prime factors of n using trial division
 
@@ -28,7 +28,7 @@ def get_prime_factors(n):
     return list(factors)
 
 
-def poly_pow(base, exp, mod, p):
+def poly_pow(base: list[int], exp: int, mod: list[int], p: int) -> list[int]:
     """
     Computes base^exp mod (mod) in Z_p[X] using binary exponentiation
 
