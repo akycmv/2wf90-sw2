@@ -4,6 +4,7 @@ import finite.prim as prim
 import finite.inverse as inverse
 
 
+# maps tasks to appropriate module functions
 def solve(exercise) -> dict[str, list[int] | bool | None]:
     answer: dict[str, list[int] | bool | None] = {"answer": []}
     match exercise["task"]:

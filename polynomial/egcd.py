@@ -18,9 +18,11 @@ def egcd(
 
     # algorithm taken from Algebra for Security script, page 27, algorithm 2.3.10 (Extended Euclidean algorithm for polynomials)
 
+    # remove trailing degrees before computing
     a = remove_degree(a)
     b = remove_degree(b)
 
+    # algorithm defaults
     x, v = [1], [1]
     y, u = [0], [0]
 
@@ -31,14 +33,17 @@ def egcd(
         a, b = b, r
         xt, yt = x, y
         x, y = u, v
+
         u = add_sub.sub(xt, mult_div.mult(q, u, p), p)
         v = add_sub.sub(yt, mult_div.mult(q, v, p), p)
+
+    # remove trailing degrees after computations
 
     a = remove_degree(a)
     x = remove_degree(x)
     y = remove_degree(y)
 
-    # monic gcd
+    # make gcd monic
     if a:
         lc_a_inv = pow(a[-1], p - 2, p)
         a = mult_div.mult(a, [lc_a_inv], p)

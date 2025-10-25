@@ -14,7 +14,9 @@ def add(f: list[int], g: list[int], p: int) -> list[int]:
     n = len(f)
     # pad smaller one with zeroes
     g = g + [0] * (n - len(g))
+
     # in polynomials resulting degree is at most that of the larger one
+    # so we linearly add both polynomials
     out = [0 for _ in range(n)]
     for i in range(n):
         out[i] = f[i] + g[i]
@@ -37,6 +39,8 @@ def sub(f: list[int], g: list[int], p: int) -> list[int]:
         n = len(f)
         g = g + [0] * (n - len(g))
 
+    # we pad both to be of same length
+    # and subtract linearly, resulting degree always <= max_degree(f, g)
     out = [0 for _ in range(n)]
     for i in range(n):
         out[i] = f[i] - g[i]

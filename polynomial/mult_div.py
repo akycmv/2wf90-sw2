@@ -34,15 +34,19 @@ def div(
     Returns None if division by zero polynomial.
     """
 
-    f = remove_degree(f[:])
-    g = remove_degree(g[:])
+    # remove degrees before dividing
+    f = remove_degree(f)
+    g = remove_degree(g)
 
+    # if g = [0] - impossible to divide
     if not g or all(c == 0 for c in g):
         return None, None
 
+    # if f = [0] - result is always [0]
     if not f or all(c == 0 for c in f):
         return [0], [0]
 
+    # if f has smaller degree - f is the remainder
     if len(f) < len(g):
         return [0], f
 

@@ -6,6 +6,7 @@ import polynomial.egcd as egcd
 import polynomial.irred as irred
 
 
+# maps tasks to appropriate module function
 def solve(exercise) -> dict[str, list[int] | bool | None]:
     answer: dict[str, list[int] | bool | None] = {"answer": []}
     match exercise["task"]:

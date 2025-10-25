@@ -1,6 +1,6 @@
 # module with irreducibility (check, generation) implementations
 
-from polynomial import egcd, add_sub
+from polynomial import egcd
 import random
 from util.util import remove_degree
 
